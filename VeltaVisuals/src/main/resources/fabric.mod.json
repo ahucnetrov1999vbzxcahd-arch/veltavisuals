@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "veltavisuals",
+  "version": "1.21.11-1.0.0",
+  "name": "VeltaVisuals",
+  "description": "Эстетический визуальный клиентский мод: HUD, окружение, красивое меню (Right Shift).",
+  "authors": ["you"],
+  "environment": "client",
+  "entrypoints": {
+    "main": ["com.veltavisuals.VeltaVisuals"],
+    "client": ["com.veltavisuals.client.VeltaVisualsClient"]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "fabric-api": "*",
+    "java": ">=21"
+  }
+}
