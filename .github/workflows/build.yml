@@ -24,11 +24,12 @@ jobs:
           gradle-version: '8.10'
 
       - name: Build mod jar
+        working-directory: VeltaVisuals
         run: gradle build --no-daemon
 
       - name: Upload built jar
         uses: actions/upload-artifact@v4
         with:
           name: VeltaVisuals-jar
-          path: build/libs/*.jar
-          
+          path: VeltaVisuals/build/libs/*.jar
+        
