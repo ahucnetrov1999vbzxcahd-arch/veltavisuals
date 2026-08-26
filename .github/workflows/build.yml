@@ -32,4 +32,3 @@ jobs:
         with:
           name: VeltaVisuals-jar
           path: VeltaVisuals/build/libs/*.jar
-        
