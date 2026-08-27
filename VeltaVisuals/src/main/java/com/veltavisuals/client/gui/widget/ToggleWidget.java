@@ -35,45 +35,9 @@ public class ToggleWidget extends ClickableWidget {
     public boolean getValue() {
         return value;
     }
-
-    @Override
-    protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
-        boolean hovered = isMouseOver(mouseX, mouseY);
-
-        if (hovered) {
-            ctx.fill(getX(), getY(), getX() + width, getY() + height, COLOR_BG_HOVER);
-        }
-
-        // Название слева
-        ctx.drawTextWithShadow(
-                MinecraftClient.getInstance().textRenderer,
-                getMessage(),
-                getX() + 4,
-                getY() + (height - 8) / 2,
-                COLOR_TEXT
-        );
-
-        // "Переключатель" справа: небольшой прямоугольник-индикатор + текст ON/OFF
-        String stateText = value ? "ON" : "OFF";
-        int stateColor = value ? COLOR_ON : COLOR_OFF;
-        int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(stateText);
-        int stateX = getX() + width - textWidth - 22;
-        int stateY = getY() + (height - 8) / 2;
-
-        // Индикатор-кружок/квадрат
-        int dotSize = 8;
-        int dotX = getX() + width - 14;
-        int dotY = getY() + (height - dotSize) / 2;
-        ctx.fill(dotX, dotY, dotX + dotSize, dotY + dotSize, stateColor);
-
-        ctx.drawTextWithShadow(
-                MinecraftClient.getInstance().textRenderer,
-                stateText,
-                stateX,
-                stateY,
-                stateColor
-        );
+@Override
+    protected void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
+        builder.put(net.minecraft.client.gui.screen.narration.NarrationPart.TITLE, getMessage());
     }
-
-    
 }
+   
