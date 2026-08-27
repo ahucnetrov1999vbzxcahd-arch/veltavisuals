@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
-public class ToggleWidget extends ClickableWidget {
+protected class ToggleWidget extends ClickableWidget {
 
     private boolean value;
     private final Consumer<Boolean> onChange;
