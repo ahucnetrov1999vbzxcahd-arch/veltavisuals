@@ -64,7 +64,7 @@ public class VeltaSliderWidget extends SliderWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
         // Фон дорожки слайдера
         ctx.fill(getX(), getY(), getX() + width, getY() + height, 0x55000000);
 
