@@ -9,16 +9,11 @@ import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
-/**
- * Простой переключатель "название — [ON/OFF]".
- * Клик по всей строке переключает значение и вызывает onChange.
- */
 public class ToggleWidget extends ClickableWidget {
 
     private boolean value;
     private final Consumer<Boolean> onChange;
 
-    // Цвета под тему "aurora" (мягкий сиреневый акцент)
     private static final int COLOR_TEXT = 0xFFE0E0FF;
     private static final int COLOR_ON = 0xFF7FB2FF;
     private static final int COLOR_OFF = 0xFF6B6B7A;
@@ -35,8 +30,54 @@ public class ToggleWidget extends ClickableWidget {
     public boolean getValue() {
         return value;
     }
-@Override
-        public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+
+    @Override
+    public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
+        boolean hovered = isMouseOver(mouseX, mouseY);
+
+        if (hovered) {
+            ctx.fill(getX(), getY(), getX() + width, getY() + height, COLOR_BG_HOVER);
+        }
+
+        ctx.drawTextWithShadow(
+                MinecraftClient.getInstance().textRenderer,
+                getMessage(),
+                getX() + 4,
+                getY() + (height - 8) / 2,
+                COLOR_TEXT
+        );
+
+        String stateText = value ? "ON" : "OFF";
+        int stateColor = value ? COLOR_ON : COLOR_OFF;
+        int textWidth = MinecraftClient.getInstance().textRenderer.getWidth(stateText);
+        int stateX = getX() + width - textWidth - 22;
+        int stateY = getY() + (height - 8) / 2;
+
+        int dotSize = 8;
+        int dotX = getX() + width - 14;
+        int dotY = getY() + (height - dotSize) / 2;
+        ctx.fill(dotX, dotY, dotX + dotSize, dotY + dotSize, stateColor);
+
+        ctx.drawTextWithShadow(
+                MinecraftClient.getInstance().textRenderer,
+                stateText,
+                stateX,
+                stateY,
+                stateColor
+        );
+    }
+
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        value = !value;
+        onChange.accept(value);
+        MinecraftClient.getInstance().getSoundManager().play(
+                PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f)
+        );
+    }
+
+    @Override
+    public void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
+        builder.put(net.minecraft.client.gui.screen.narration.NarrationPart.TITLE, getMessage());
     }
 }
-   
