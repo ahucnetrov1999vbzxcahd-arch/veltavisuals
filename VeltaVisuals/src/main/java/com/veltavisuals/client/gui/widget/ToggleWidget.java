@@ -36,8 +36,7 @@ public class ToggleWidget extends ClickableWidget {
         return value;
     }
 @Override
-    protected void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
-        builder.put(net.minecraft.client.gui.screen.narration.NarrationPart.TITLE, getMessage());
+        public void renderWidget(DrawContext ctx, int mouseX, int mouseY, float delta) {
     }
 }
    
