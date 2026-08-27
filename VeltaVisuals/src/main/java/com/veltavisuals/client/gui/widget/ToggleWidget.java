@@ -75,17 +75,5 @@ public class ToggleWidget extends ClickableWidget {
         );
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
-        value = !value;
-        onChange.accept(value);
-        MinecraftClient.getInstance().getSoundManager().play(
-                PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK.value(), 1.0f)
-        );
-    }
-
-    @Override
-    protected void appendClickableNarrations(net.minecraft.client.gui.screen.narration.NarrationMessageBuilder builder) {
-        builder.put(net.minecraft.client.gui.screen.narration.NarrationPart.TITLE, getMessage());
-    }
+    
 }
