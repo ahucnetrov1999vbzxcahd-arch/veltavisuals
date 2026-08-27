@@ -11,16 +11,13 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
-/**
- * Клиентская инициализация: keybind на правый Shift открывает
- * VeltaMenuScreen, плюс подписка на отрисовку HUD.
- */
 public class VeltaVisualsClient implements ClientModInitializer {
 
-    // Категория для экрана "Controls" в настройках Minecraft
-    private static final String CATEGORY = "key.categories.veltavisuals";
+    private static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of("veltavisuals", "main"));
 
     public static KeyBinding openMenuKey;
 
@@ -28,7 +25,6 @@ public class VeltaVisualsClient implements ClientModInitializer {
     public void onInitializeClient() {
         VeltaConfig.load();
 
-        // Регистрация клавиши: правый Shift, переназначаемая игроком в настройках
         openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.veltavisuals.open_menu",
                 InputUtil.Type.KEYSYM,
@@ -36,7 +32,6 @@ public class VeltaVisualsClient implements ClientModInitializer {
                 CATEGORY
         ));
 
-        // Проверка нажатия каждый клиентский тик
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openMenuKey.wasPressed()) {
                 if (client.currentScreen == null) {
@@ -45,7 +40,6 @@ public class VeltaVisualsClient implements ClientModInitializer {
             }
         });
 
-        // Регистрация HUD-рендера (координаты/FPS/часы/компас и т.д.)
         HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
             MinecraftClient client = MinecraftClient.getInstance();
             if (VeltaConfig.get().hudEnabled && client.player != null) {
