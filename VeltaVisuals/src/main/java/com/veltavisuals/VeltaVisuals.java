@@ -1,27 +1,52 @@
-package com.veltavisuals;
+package com.veltavisuals.client;
 
-import net.fabricmc.api.ModInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.veltavisuals.VeltaVisuals;
+import com.veltavisuals.client.config.VeltaConfig;
+import com.veltavisuals.client.gui.VeltaMenuScreen;
+import com.veltavisuals.client.hud.HudRenderer;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
-/**
- * VeltaVisuals — эстетический клиентский визуальный мод.
- * Версия под Minecraft 1.21.11 (Fabric).
- *
- * Общая (common) точка входа. Вся клиентская логика (меню, HUD, keybind)
- * находится в пакете client, инициализируется через VeltaVisualsClient
- * (ClientModInitializer), т.к. это чисто визуальный клиентский мод.
- */
-public class VeltaVisuals implements ModInitializer {
+public class VeltaVisualsClient implements ClientModInitializer {
 
-    public static final String MOD_ID = "veltavisuals";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of("veltavisuals", "main"));
+
+    public static KeyBinding openMenuKey;
 
     @Override
-    public void onInitialize() {
-        LOGGER.info("VeltaVisuals: common init (version 1.21.11)");
-        // Здесь регистрируются только общие вещи (если появятся:
-        // например, сетевые пакеты синхронизации конфига на сервере).
-        // Никакой игровой логики/читов — мод чисто визуальный.
+    public void onInitializeClient() {
+        VeltaConfig.load();
+
+        openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.veltavisuals.open_menu",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_RIGHT_SHIFT,
+                CATEGORY
+        ));
+
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (openMenuKey.wasPressed()) {
+                if (client.currentScreen == null) {
+                    client.setScreen(new VeltaMenuScreen());
+                }
+            }
+        });
+
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (VeltaConfig.get().hudEnabled && client.player != null) {
+                HudRenderer.render(drawContext, client);
+            }
+        });
+
+        VeltaVisuals.LOGGER.info("VeltaVisuals: client init, keybind = Right Shift");
     }
 }
